@@ -21,4 +21,9 @@ class Category extends Model
     {
         return $this->hasMany(static::class, 'parent_id');
     }
+
+    public function parent(): BelongsTo
+    {
+        return $this->belongsTo(static::class, 'parent_id');
+    }
 }

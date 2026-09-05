@@ -70,7 +70,7 @@ class PostController extends Controller
     public function show(Post $post)
     {
         
-        $post->load(['category', 'author', 'tags']);
+        $post->load(['category', 'author']); //tags
 
         return new PostResource($post);
     }

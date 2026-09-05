@@ -101,17 +101,37 @@ resources/js/
 - [x] Реализация пагинации, фильтрации, поиска
 - [x] Все тесты проходят (4 passed, 70 assertions)
 
-### Этап 4: Политики и авторизация (1-2 часа)
-- [ ] Создание PostPolicy и CategoryPolicy
-- [ ] Настройка авторизации (возможно, Laravel Breeze/Jetstream)
-- [ ] Реализация ролей (админ, автор, пользователь)
+### Этап 4: Политики и авторизация (1-2 часа) ✅ ВЫПОЛНЕН
+- [x] Создание PostPolicy и CategoryPolicy
+  - [x] PostPolicy: автор или админ могут создавать/редактировать/удалять посты
+  - [x] CategoryPolicy: только админ может управлять категориями
+- [x] Настройка авторизации через Sanctum
+  - [x] Установлен Laravel Sanctum (токены доступа)
+  - [x] AuthController с login/logout
+  - [x] Защита маршрутов store/update/destroy через middleware auth:sanctum
+  - [x] GET-маршруты остались публичными
+- [x] Реализация ролей (админ, автор, пользователь)
+  - [x] Миграция add_role_to_users_table
+  - [x] Константы ролей и isAdmin()/isAuthor() в модели User
+  - [x] HasApiTokens подключён к модели User
+- [x] Настроен Git-репозиторий с удалённым remote
 
-### Этап 5: Frontend настройка (2-3 часа)
-- [ ] Установка React и зависимостей
-- [ ] Настройка Vite для React
-- [ ] Создание базового layout с Header/Footer
-- [ ] Настройка роутинга (React Router)
-- [ ] Создание сервисного слоя для API
+### Этап 5: Frontend настройка (2-3 часа) ✅ ВЫПОЛНЕН
+- [x] Установка React и зависимостей
+  - [x] react, react-dom, react-router-dom, @vitejs/plugin-react
+  - [x] Исправлен конфликт версий (ERESOLVE): plugin-react 4.x + Vite 7.x + laravel-vite-plugin 2.x
+- [x] Настройка Vite для React
+  - [x] plugin-react в vite.config.js
+  - [x] proxy `/api` → `http://localhost:8000`
+- [x] Создание базового layout с Header/Footer
+  - [x] Header.jsx, Footer.jsx (заглушки готовы к наполнению)
+- [x] Настройка роутинга (React Router)
+  - [x] Браузерный роутер + catch-all маршрут в web.php на app.blade.php
+  - [x] Маршруты: /, /posts, /posts/:id, /login
+- [x] Создание сервисного слоя для API
+  - [x] api.jsx (axios + перехватчик токена), postService, categoryService, authService
+  - [x] app.blade.php со скелетом `<div id="root">`
+- [x] Сборка проходит (`npm run build`), фронтенд запускается
 
 ### Этап 6: React компоненты (4-6 часов)
 - [ ] Компоненты для отображения новостей:
