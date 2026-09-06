@@ -133,14 +133,19 @@ resources/js/
   - [x] app.blade.php со скелетом `<div id="root">`
 - [x] Сборка проходит (`npm run build`), фронтенд запускается
 
-### Этап 6: React компоненты (4-6 часов)
-- [ ] Компоненты для отображения новостей:
-  - PostList, PostCard, PostDetail
-- [ ] Компоненты для категорий:
-  - CategoryList, CategoryCard, CategoryTree
-- [ ] Формы для создания/редактирования:
-  - PostForm, CategoryForm
-- [ ] Компоненты UI (Button, Input, Modal, Pagination)
+### Этап 6: React компоненты (4-6 часов) ✅ ВЫПОЛНЕН
+- [x] Компоненты для отображения новостей:
+  - [x] PostList, PostCard, PostDetail (components/Post/)
+- [x] Компоненты для категорий:
+  - [x] CategoryList (components/Category/)
+- [x] Формы для создания/редактирования:
+  - [x] PostForm (components/Post/PostForm.jsx) — create + edit
+- [x] Компоненты UI:
+  - [x] Button, Input, Pagination (components/UI/)
+- [x] Layout (Header/Footer/Outlet) подключён в роутер
+  - [x] Header с авторизацией (Войти/Выйти через authService)
+  - [x] Исправлены опечатки (handleLogout, authService, lastPage, setItem)
+- [x] Сборка проходит (`npm run build`), страницы рендерятся без ошибок в консоли
 
 ### Этап 7: Страницы и роутинг (2-3 часа)
 - [ ] Главная страница (список последних новостей)

@@ -6,7 +6,7 @@ export const categoryService = {
     },
 
     async getById(id) {
-        return (await api.get(`/posts/${id}`)).data;
+        return (await api.get(`/categories/${id}`)).data;
     },
     async create(payload) {
         return (await api.post('/categories', payload)).data;
