@@ -22,7 +22,7 @@
         <env name="DB_CONNECTION" value="mysql"/>
         <env name="DB_HOST" value="127.127.126.30"/>
         <env name="DB_PORT" value="3306"/>
-        <env name="DB_DATABASE" value="laraveles"/>
+        <env name="DB_DATABASE" value="laravel_test"/>
         <env name="DB_USERNAME" value="root"/>
         <env name="DB_PASSWORD" value=""/>
         <env name="APP_MAINTENANCE_DRIVER" value="file"/>

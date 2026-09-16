@@ -12,7 +12,7 @@ class PostStoreRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,10 +24,11 @@ class PostStoreRequest extends FormRequest
     {
         return [
             'title' => 'required|string|max:255',
+            'slug' => 'required|string|max:255|unique:posts,slug',
             'content' => 'required|string',
             'category_id' => 'required|exists:categories,id',
-            'tags' => 'array',
-            'tags.*' => 'exists:tags,id',
+            'user_id' => 'required|exists:users,id',
+            'excerpt' => 'nullable|string',
             'is_published' => 'boolean',
             'published_at' => 'nullable|date',
         ];
@@ -36,7 +37,8 @@ class PostStoreRequest extends FormRequest
     protected function prepareForValidation(): void 
     {
         $this->merge([
-            'author_id'=> auth()->id(),
+            'slug' => $this->slug ?? \Illuminate\Support\Str::slug($this->title),
+            'user_id' => auth()->id(),
         ]);
     }
 }

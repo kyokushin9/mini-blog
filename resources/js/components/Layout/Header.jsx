@@ -4,7 +4,7 @@ import {authService} from '../../services/authService';
 export default function Header() {
     const user = authService.getUser();
 
-    const handkeLogout = () => {
+    const handleLogout = () => {
         authService.logout();
         window.location.reload();
     }

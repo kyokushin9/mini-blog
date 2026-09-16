@@ -17,7 +17,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::with('children')->whereNull('parent_id')->get();
+        $categories = Category::with('children.children')->whereNull('parent_id')->get();
         
         return new CategoryCollection($categories);
     }
@@ -69,11 +69,11 @@ class CategoryController extends Controller
 
         $this->authorize('delete', Category::class);
 
-        if($category->children()->exists()) {
+        /*if($category->children()->exists()) {
              return response()->json([
                 'message' => 'Cannot delete category with children'
             ], 422);
-        }
+        }*/
 
         $category->delete();
 

@@ -12,7 +12,7 @@ class PostCollection extends ResourceCollection
      *
      * @return array<int|string, mixed>
      */
-    public function toArray(Request $request): array
+    /*public function toArray(Request $request): array
     {
          return [
             'data' => $this->collection,
@@ -30,5 +30,5 @@ class PostCollection extends ResourceCollection
                 'next' => $this->nextPageUrl(),
             ],
         ];
-    }
+    }*/
 }

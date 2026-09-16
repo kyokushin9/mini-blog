@@ -16,7 +16,18 @@ class Post extends Model
 
     //use SoftDeletes;
     
-   // protected $dates = ['deleted_at'];
+    protected $fillable = [
+        'title',
+        'slug',
+        'content',
+        'excerpt',
+        'image',
+        'category_id',
+        'user_id',
+        'published_at',
+        'is_published',
+    ];
+
 
     public function category(): BelongsTo
     {

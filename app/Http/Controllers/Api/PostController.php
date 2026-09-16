@@ -16,37 +16,26 @@ class PostController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Request $request) 
     {
+        $query = Post::with(['category', 'author']);
 
-        $posts = Cache::remember(
-            'posts_' . md5(json_encode($request->all())), 
-            3600, 
-            function () use ($request) {
-                $query = Post::with(['category', 'author']);
+        if ($request->filled('search')) {
+            $query->where('title', 'like', '%' . $request->search . '%');
+        }
 
-                if($request->has('search')) {
-                    $query->where('title', 'like', '%' . $request->search . '%');
-                }
-                
-                if($request->has('category_id')) {
-                    $query->where('category_id', $request->category_id);
-                }
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->category_id);
+        }
 
-                $sortBy = $request->get('sort_by','created_at');
-                $order = $request->get('order', 'desc');
-                $query->orderBy($sortBy,$order);
+        $sortBy = $request->get('sort_by', 'created_at');
+        $order  = $request->get('order', 'desc');
+        $query->orderBy($sortBy, $order);
 
-                return $query->paginate($request->get('per_page', 15));
-            }
-        );
-
-
-        
-        
-        return new PostCollection($posts);
-
+        return new PostCollection($query->paginate($request->get('per_page', 15)));
     }
+
+
 
     /**
      * Store a newly created resource in storage.
@@ -81,7 +70,7 @@ class PostController extends Controller
     public function update(PostUpdateRequest $request, Post $post)
     {
 
-        $this->authorize('update', Post::class);
+        $this->authorize('update', $post); //Post::class);
 
         $validated = $request->validated();
 
@@ -96,7 +85,7 @@ class PostController extends Controller
     public function destroy(Post $post)
     {
 
-        $this->authorize('delete', Post::class);
+        $this->authorize('delete', $post); //Post::class);
 
         $post->delete();
 

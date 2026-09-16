@@ -3,8 +3,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import Input from '../UI/Input';
 import Button from "../UI/Button";
 import { postService } from "../../services/postService";
+import { categoryService } from '../../services/categoryService';
 
-export default function PostForm({ categories }) {
+export default function PostForm() {
     const {id} = useParams();
     const isEdit = Boolean(id);
     const navigate = useNavigate();
@@ -12,7 +13,10 @@ export default function PostForm({ categories }) {
     const [form, setForm] = useState({title: '', content: '', category_id: '', excerpt: '' });
     const [submitting, setSubmitting] = useState(false);
 
+    const [categories, setCategories] = useState([]);
+
     useEffect(() => {
+        categoryService.getAll().then(res => setCategories(res.data ?? []));
         if(isEdit) {
             postService.getById(id).then(({data}) => {
                 setForm({
@@ -42,6 +46,10 @@ export default function PostForm({ categories }) {
             setSubmitting(false);
         }
     }
+
+    const handleChange = (e) => {
+        setForm({ ...form, [e.target.name]: e.target.value });
+    };
 
      return (
         <form onSubmit={handleSubmit} className="max-w-2xl mx-auto p-8 space-y-4">

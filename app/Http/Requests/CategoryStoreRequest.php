@@ -12,7 +12,7 @@ class CategoryStoreRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -30,7 +30,7 @@ class CategoryStoreRequest extends FormRequest
         ];
     }
 
-    protected function pepareForValidation():void 
+    protected function prepareForValidation(): void
     {
         if (!$this->has('slug')) {
             $this->merge([
@@ -38,4 +38,5 @@ class CategoryStoreRequest extends FormRequest
             ]);
         }
     }
+
 }

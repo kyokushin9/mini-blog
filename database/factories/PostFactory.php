@@ -30,8 +30,8 @@ class PostFactory extends Factory
             'content'=> fake()->paragraphs(5, true),
             'excerpt' => fake()->sentence(),
             'image' => fake() ->imageUrl(),
-            'category_id' => fn () => Category::inRandomOrder()->first()->id,
-            'user_id' => fn () => User::inRandomOrder()->first()->id,
+            'category_id' => fn () => (Category::inRandomOrder()->first() ?? Category::factory()->create())->id,
+            'user_id' => fn () => (User::inRandomOrder()->first() ?? User::factory()->create())->id,
             'published_at' => fake()->dateTimeThisYear(),
         ];
     }
