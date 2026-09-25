@@ -18,7 +18,7 @@ class PostController extends Controller
      */
     public function index(Request $request) 
     {
-        $query = Post::with(['category', 'author']);
+        $query = Post::with(['category', 'author', 'tags']);
 
         if ($request->filled('search')) {
             $query->where('title', 'like', '%' . $request->search . '%');
@@ -47,7 +47,18 @@ class PostController extends Controller
         
         $validated = $request->validated();
 
+        if($request->hasFile('image')) {
+            $path = $request->file('image')->store('posts');
+            $validated['image'] = $path;
+        }
+
         $post = Post::create($validated);
+
+        if($request->has('tags')) {
+            $post->tags()->sync($request->tags);
+        }
+
+        $post->load('tags'); 
 
         return new PostResource($post);
 
@@ -59,7 +70,7 @@ class PostController extends Controller
     public function show(Post $post)
     {
         
-        $post->load(['category', 'author']); //tags
+        $post->load(['category', 'author', 'tags', 'comments.user']); //tags
 
         return new PostResource($post);
     }
@@ -74,7 +85,11 @@ class PostController extends Controller
 
         $validated = $request->validated();
 
-        $post ->update($validated);
+        $post->update($validated);
+
+        if($request->has('tags')) {
+            $post->tags()->sync($request->tags);
+        }
 
         return new PostResource($post);
     }

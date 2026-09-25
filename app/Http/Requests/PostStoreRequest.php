@@ -31,6 +31,9 @@ class PostStoreRequest extends FormRequest
             'excerpt' => 'nullable|string',
             'is_published' => 'boolean',
             'published_at' => 'nullable|date',
+            'tags' => 'array',
+            'tags.*' => 'exists:tags,id',
+            'image' => 'nullable|file|image|max:2048',
         ];
     }
 

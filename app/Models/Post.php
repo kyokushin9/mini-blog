@@ -55,4 +55,14 @@ class Post extends Model
         return $query->where('is_published', false);
     }
 
+    public function tags(): BelongsToMany
+    {
+        return $this->belongsToMany(Tag::class);
+    }
+
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class);
+    }
+
 }

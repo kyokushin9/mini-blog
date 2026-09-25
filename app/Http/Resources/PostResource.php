@@ -33,6 +33,7 @@ class PostResource extends JsonResource
                 ];
             }),
             'tags' => TagResource::collection($this->whenLoaded('tags')),
+            'comments' => CommentResource::collection($this->whenLoaded('comments')), 
         ];
     }
 }

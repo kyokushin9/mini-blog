@@ -17,4 +17,10 @@ export const postService = {
     async remove(id) {
         return (await api.delete(`/posts/${id}`)).data;
     },
+    async addComment(postId, body) {
+        return (await api.post(`/posts/${postId}/comments`, { body })).data;
+    },
+    async deleteComment(commentId) {
+        return (await api.delete(`/comments/${commentId}`)).data;
+    },
 }

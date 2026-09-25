@@ -7,6 +7,7 @@ use Tests\TestCase;
 use App\Models\User;
 use App\Models\Post;
 use App\Models\Category;
+use App\Models\Tag;
 use Illuminate\Support\Str;
 
 
@@ -131,5 +132,35 @@ class PostApiTest extends TestCase
 
         $response->assertStatus(422);
     }
+
+    public function test_author_can_create_post_with_tags(): void
+    {
+        $user = User::factory()->create(['role' => 'author']);
+        $token = $user->createToken('test')->plainTextToken;
+        $category = Category::factory()->create();
+        $tag1 = Tag::factory()->create();
+        $tag2 = Tag::factory()->create();
+
+        $response = $this->withToken($token)->postJson('/api/posts', [
+            'title' => 'Post with tags ' . Str::random(6),
+            'content' => 'Some content',
+            'category_id' => $category->id,
+            'tags' => [$tag1->id, $tag2->id],
+        ]);
+
+        $response->assertStatus(201);
+
+        // 1. Достаём id созданного поста из тела ответа (публ. метод getData)
+        $data = $response->getData(true);          // ассоциативный массив
+        $postId = $data['data']['id'];
+
+        // 2. Проверяем отдельным GET-запросом, что теги сохранились
+        $show = $this->getJson("/api/posts/{$postId}");
+        $show->assertStatus(200)
+            ->assertJsonPath('data.tags.0.id', $tag1->id)
+            ->assertJsonPath('data.tags.1.id', $tag2->id);
+    }
+
+
 
 }

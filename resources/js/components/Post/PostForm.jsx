@@ -4,6 +4,8 @@ import Input from '../UI/Input';
 import Button from "../UI/Button";
 import { postService } from "../../services/postService";
 import { categoryService } from '../../services/categoryService';
+import { tagService } from '../../services/tagService';
+
 
 export default function PostForm() {
     const {id} = useParams();
@@ -14,9 +16,12 @@ export default function PostForm() {
     const [submitting, setSubmitting] = useState(false);
 
     const [categories, setCategories] = useState([]);
+    const [tags, setTags] = useState([]);
+    const [formTags, setFormTags] = useState([]);
 
     useEffect(() => {
         categoryService.getAll().then(res => setCategories(res.data ?? []));
+        tagService.getAll().then(res => setTags(res.data ?? []));
         if(isEdit) {
             postService.getById(id).then(({data}) => {
                 setForm({
@@ -25,6 +30,8 @@ export default function PostForm() {
                     category_id: data.category_id ?? '',
                     excerpt: data.excerpt ?? '',
                 });
+
+                setFormTags((data.tags ?? []).map(t => t.id));
             });
         }
     }, [id])
@@ -33,10 +40,13 @@ export default function PostForm() {
         e.preventDefault();
         setSubmitting(true);
         try{
+
+            const payload = { ...form, tags: formTags };
+
             if(isEdit) {
-                await postService.update(id, form);
+                await postService.update(id, payload);
             } else {
-                await postService.create(form);
+                await postService.create(payload);
             }
             navigate(isEdit? `/posts/${id}` : '/posts');
         } catch (err) {
@@ -51,7 +61,15 @@ export default function PostForm() {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
-     return (
+    const handleTagToggle = (tagId) => {
+        if(formTags.includes(tagId)) {
+            setFormTags(formTags.filter(id => id !== tagId));
+        } else {
+            setFormTags([...formTags, tagId]);
+        }
+    };
+
+    return (
         <form onSubmit={handleSubmit} className="max-w-2xl mx-auto p-8 space-y-4">
             <Input label="Заголовок" name="title" value={form.title} onChange={handleChange} required />
             <Input label="Аннотация (excerpt)" name="excerpt" value={form.excerpt} onChange={handleChange} />
@@ -68,6 +86,24 @@ export default function PostForm() {
                 <textarea name="content" value={form.content} onChange={handleChange} required rows={10}
                           className="mt-1 w-full border rounded px-3 py-2" />
             </label>
+            <fieldset className="block border p-3 rounded">
+                <legend>Теги</legend>
+                {tags.length === 0 ? (
+                    <p className="text-sm text-gray-500">Теги пока не созданы</p>
+                ) : (
+                    tags.map(tag => (
+                        <label key={tag.id} className="inline-flex items-center gap-2 mr-3">
+                            <input 
+                                type="checkbox"
+                                checked={formTags.includes(tag.id)}
+                                onChange={() => handleTagToggle(tag.id)}
+                                className="accent-blue-600"
+                            />
+                            <span>{tag.name}</span>
+                        </label>
+                    ))
+                )}
+            </fieldset>
             <Button type="submit" variant="primary" disabled={submitting}>
                 {submitting ? 'Сохранение...' : (isEdit ? 'Сохранить' : 'Создать')}
             </Button>
