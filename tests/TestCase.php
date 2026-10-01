@@ -19,22 +19,20 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
-     * Ensure the schema exists and truncate all tables before each test.
+     * Ensure the schema is up-to-date and truncate all tables before each test.
      *
      * This is a deterministic alternative to the RefreshDatabase / DatabaseTruncation
      * traits, which rely on asynchronous artisan calls and don't reliably clean
      * MySQL tables between tests.
+     *
+     * migrate:fresh rebuilds the schema from all migrations on every test run,
+     * so new tables (e.g. comments) are always present in the test database.
      */
     protected function prepareTestDatabase(): void
     {
+        $this->artisan('migrate:fresh')->run();
+
         $tables = DB::select('SHOW TABLES');
-
-        // First run on a fresh database: create the schema synchronously.
-        if (count($tables) === 0) {
-            $this->artisan('migrate')->run();
-
-            $tables = DB::select('SHOW TABLES');
-        }
 
         $names = [];
 

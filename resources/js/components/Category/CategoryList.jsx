@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 export default function CategoryList({ categories }) {
     return (
         <ul className="space-y-1">
-            {categories.map(cat => <CategoryItem key={cat.id} cat={cat} />)}
+            {(categories ?? []).map(cat => <CategoryItem key={cat.id} cat={cat} />)}
         </ul>
     );
 }

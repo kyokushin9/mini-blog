@@ -5,7 +5,7 @@ import {postService} from '../services/postService';
 import {categoryService} from '../services/categoryService';
 
 export default function CategoryDetail(){
-    const {id} = useState();
+    const { id } = useParams();
     const [posts,setPosts] = useState([]);
     const [category, setCategory] = useState(null);
     const [meta,setMeta] = useState({ current_page: 1, last_page: 1 });

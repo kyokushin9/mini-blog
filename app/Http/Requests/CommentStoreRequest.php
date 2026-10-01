@@ -29,9 +29,8 @@ class CommentStoreRequest extends FormRequest
 
     protected function prepareForValidation(): void 
     {
-        $this->merge([
-            'user_id' => auth()->id(),
-            'post_id' => $this->route('post')->id,
-        ]);
+        // Примечание: user_id и post_id подставляются в контроллере
+        // (из авторизованного пользователя и привязанной модели маршрута),
+        // т.к. на этапе prepareForValidation они ещё не доступны надёжно.
     }
 }

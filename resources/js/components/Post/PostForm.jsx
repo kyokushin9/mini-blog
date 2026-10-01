@@ -5,6 +5,7 @@ import Button from "../UI/Button";
 import { postService } from "../../services/postService";
 import { categoryService } from '../../services/categoryService';
 import { tagService } from '../../services/tagService';
+import api from '../../services/api';
 
 
 export default function PostForm() {
@@ -18,6 +19,7 @@ export default function PostForm() {
     const [categories, setCategories] = useState([]);
     const [tags, setTags] = useState([]);
     const [formTags, setFormTags] = useState([]);
+    const [imageFile, setImageFile] = useState(null);
 
     useEffect(() => {
         categoryService.getAll().then(res => setCategories(res.data ?? []));
@@ -41,13 +43,35 @@ export default function PostForm() {
         setSubmitting(true);
         try{
 
-            const payload = { ...form, tags: formTags };
+            if(imageFile) {
 
-            if(isEdit) {
-                await postService.update(id, payload);
+                const fd = new FormData();
+                fd.append('title', form.title);
+                fd.append('excerpt', form.excerpt);
+                fd.append('content', form.content);
+                fd.append('category_id', form.category_id);
+                fd.append('tags', JSON.stringify(formTags));
+                fd.append('image', imageFile);
+
+                if(isEdit) {
+                    await api.put(`/posts/${id}`, fd);
+                } else {
+                    await api.post('/posts', fd);
+                }
+
             } else {
-                await postService.create(payload);
+
+                const payload = { ...form, tags: formTags };
+
+                if(isEdit) {
+                    await postService.update(id, payload);
+                } else {
+                    await postService.create(payload);
+                }
+
             }
+
+            
             navigate(isEdit? `/posts/${id}` : '/posts');
         } catch (err) {
             console.error(err);
@@ -73,6 +97,12 @@ export default function PostForm() {
         <form onSubmit={handleSubmit} className="max-w-2xl mx-auto p-8 space-y-4">
             <Input label="Заголовок" name="title" value={form.title} onChange={handleChange} required />
             <Input label="Аннотация (excerpt)" name="excerpt" value={form.excerpt} onChange={handleChange} />
+            <label className="block">
+                <span>Изображение</span>
+                <input type="file" accept="image/*"
+                    onChange={e => setImageFile(e.target.files[0])}
+                    className="mt-1 w-full border rounded px-3 py-2" />
+            </label>
             <label className="block">
                 <span>Категория</span>
                 <select name="category_id" value={form.category_id} onChange={handleChange}
